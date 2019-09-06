@@ -12,7 +12,11 @@ class RenderTarget {
 public:
 	RenderTarget();
 	virtual ~RenderTarget();
-	void Render(unsigned int* data, int w, int h);
+	virtual void Render(unsigned int* data, int w, int h) = 0;
+	virtual void Flip() = 0;
+	virtual void BeginGraphics() = 0;
+	virtual void Initialize() = 0;
+	virtual void CloseGraphics() = 0;
 };
 
 #endif /* RENDERTARGET_H_ */
