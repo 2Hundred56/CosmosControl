@@ -7,14 +7,6 @@
 
 #include "SDLTarget.h"
 #include "SDL2/SDL.h"
-SDLTarget::SDLTarget() {
-	// TODO Auto-generated constructor stub
-
-}
-
-SDLTarget::~SDLTarget() {
-	// TODO Auto-generated destructor stub
-}
 
 void SDLTarget::Render(unsigned int *data, int w, int h) {
 	if (width!=w || height!=h) {

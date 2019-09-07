@@ -39,15 +39,6 @@ unsigned int getpixel(SDL_Surface *surface, int x, int y)
     }
 }
 
-ResourceManager::ResourceManager() {
-	// TODO Auto-generated constructor stub
-
-}
-
-ResourceManager::~ResourceManager() {
-	// TODO Auto-generated destructor stub
-}
-
 BasicTexture* ResourceManager::LoadTexture(char* key) {
 	auto it=textures.find(std::string(key));
 	if (it!=textures.end()) return it->second;

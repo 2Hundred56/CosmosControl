@@ -7,12 +7,3 @@
 
 #include "RenderTarget.h"
 
-RenderTarget::RenderTarget() {
-	// TODO Auto-generated constructor stub
-
-}
-
-RenderTarget::~RenderTarget() {
-	// TODO Auto-generated destructor stub
-}
-

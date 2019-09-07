@@ -22,10 +22,6 @@ GraphicsManager::GraphicsManager(int w, int h) {
 
 }
 
-GraphicsManager::~GraphicsManager() {
-	// TODO Auto-generated destructor stub
-
-}
 void GraphicsManager::RenderTexture(Texture* texture, Vector vector,
 		RenderData renderData) {
 	//TODO: Process data to align with RenderData
@@ -61,7 +57,7 @@ unsigned int* GraphicsManager::Process() {
 		for (int j=0; j<height; j++) {
 			pixel=Pixel();
 			pixels=data[i][j];
-			//TODO: Might regret this
+			//TODO: Stare at this for 10 minutes
 			std::sort(pixels.begin(), pixels.end());
 			for (auto it=pixels.begin(); it!=pixels.end(); it++) {
 				pixel+=(*it);

@@ -8,9 +8,6 @@
 #include "BasicTexture.h"
 #include "IntVector.h"
 #include "Pixel.h"
-BasicTexture::~BasicTexture() {
-	// TODO Auto-generated destructor stub
-}
 
 BasicTexture::BasicTexture(int int1, int int2, Pixel** p) : width(int1), height(int2), pixels(p) {
 }

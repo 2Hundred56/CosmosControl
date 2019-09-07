@@ -7,12 +7,4 @@
 
 #include "CentralManager.h"
 
-CentralManager::CentralManager() {
-	// TODO Auto-generated constructor stub
-
-}
-
-CentralManager::~CentralManager() {
-	// TODO Auto-generated destructor stub
-}
 
