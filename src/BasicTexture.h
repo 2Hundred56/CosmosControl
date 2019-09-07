@@ -11,7 +11,7 @@
 #include "Texture.h"
 class BasicTexture: public Texture {
 public:
-	BasicTexture();
+	BasicTexture(int, int, Pixel**);
 	virtual ~BasicTexture();
 	virtual Pixel getPixel(IntVector);
 	virtual int getWidth() {

@@ -7,6 +7,7 @@
 
 #include "PaletteTexture.h"
 #include "IntVector.h"
+#include "Pixel.h"
 PaletteTexture::PaletteTexture() {
 	// TODO Auto-generated constructor stub
 
