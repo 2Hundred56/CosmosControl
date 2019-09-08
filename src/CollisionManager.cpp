@@ -29,10 +29,10 @@ int sign(float f) {
 		return 0;
 }
 CollisionInfo CollisionManager::CheckCollision(CollisionHandle* h1, CollisionHandle* h2) {
-	Shape* s1 = h1->getShape();
-	Vector p1 = h1->getPos();
-	Shape* s2 = h2->getShape();
-	Vector p2 = h2->getPos();
+	Shape* s1 = h1->GetShape();
+	Vector p1 = h1->GetPos();
+	Shape* s2 = h2->GetShape();
+	Vector p2 = h2->GetPos();
 	std::set<Vector> axes, axes2;
 	axes = s1->Axes(s2, p2-p1);
 	axes2 = s2->Axes(s1, p1-p2);

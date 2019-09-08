@@ -15,11 +15,12 @@ public:
 
 	}
 	Rect() : x(0), y(0), w(0), h(0) {
-
 	}
+	float Area();
 };
 
 Rect operator+(Rect r, Vector v);
+Rect Union(Rect r1, Rect r2);
 bool RectOverlap(Rect r1, Rect r2);
 
 #endif /* RECT_H_ */
