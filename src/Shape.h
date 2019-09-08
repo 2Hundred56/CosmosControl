@@ -8,17 +8,16 @@
 #ifndef SHAPE_H_
 #define SHAPE_H_
 #include <set>
-class CollisionAxis;
+class Vector;
 class Projection;
-class CollisionCheck;
 class Rect;
 class Shape {
 public:
 	virtual ~Shape() {
 
 	}
-	virtual std::set<CollisionAxis> Axes (CollisionCheck) = 0;
-	virtual Projection Proj(CollisionAxis axis) = 0;
+	virtual std::set<Vector> Axes (Shape*, Vector) = 0;
+	virtual Projection Proj(Vector axis) = 0;
 	virtual Rect ContainBox() = 0;
 };
 

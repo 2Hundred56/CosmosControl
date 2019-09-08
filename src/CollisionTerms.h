@@ -17,16 +17,8 @@ public:
 	Vector axis;
 };
 class Projection {
-	Vector v;
-
+	float min;
+	float max;
 };
-class CollisionCheck {
-public:
-	Shape* s1;
-	Vector p1;
-	Shape* s2;
-	Vector p2;
-};
-
 
 #endif /* COLLISIONTERMS_H_ */
