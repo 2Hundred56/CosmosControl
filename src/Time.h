@@ -25,7 +25,7 @@ public:
 Time operator+(Time, TimeDelta);
 Time operator-(Time, TimeDelta);
 Time& operator+=(Time&, TimeDelta);
-Time operator-=(Time, TimeDelta);
+Time& operator-=(Time&, TimeDelta);
 TimeDelta operator+(TimeDelta, TimeDelta);
 TimeDelta operator-(TimeDelta, TimeDelta);
 TimeDelta operator*(TimeDelta, float);
