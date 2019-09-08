@@ -14,7 +14,7 @@ class CollisionManager {
 public:
 	CollisionManager();
 	virtual ~CollisionManager();
-	CollisionInfo CheckCollision(Shape*, Vector, Shape*, Vector);
+	CollisionInfo CheckCollision(CollisionHandle* h1, CollisionHandle* h2);
 };
 
 #endif /* COLLISIONMANAGER_H_ */

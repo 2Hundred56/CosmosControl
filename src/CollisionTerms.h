@@ -23,12 +23,17 @@ class Projection {
 
 	}
 };
-Projection operator+ (Projection p1, Projection p2) {
-	return Projection(p1.min+p2.min, p2.max+p2.max);
-}
+Projection operator +(Projection p1, Projection p2);
 class CollisionInfo {
 	Vector normal;
+	CollisionInfo(Vector);
 };
-CollisionInfo collisionInfo;
+
+class CollisionHandle {
+	Shape* getShape();
+	Vector getPos();
+	void collisionCallback(CollisionHandle* handle, CollisionInfo collision);
+};
+CollisionInfo NoCollision();
 
 #endif /* COLLISIONTERMS_H_ */

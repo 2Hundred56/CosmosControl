@@ -28,8 +28,11 @@ int sign(float f) {
 	else
 		return 0;
 }
-CollisionInfo CollisionManager::CheckCollision(Shape* s1, Vector p1, Shape* s2,
-		Vector p2) {
+CollisionInfo CollisionManager::CheckCollision(CollisionHandle* h1, CollisionHandle* h2) {
+	Shape* s1 = h1->getShape();
+	Vector p1 = h1->getPos();
+	Shape* s2 = h2->getShape();
+	Vector p2 = h2->getPos();
 	std::set<Vector> axes, axes2;
 	axes = s1->Axes(s2, p2-p1);
 	axes2 = s2->Axes(s1, p1-p2);
@@ -47,7 +50,7 @@ CollisionInfo CollisionManager::CheckCollision(Shape* s1, Vector p1, Shape* s2,
 		Projection proj2 = s2->Proj(axis)+Projection(proj(p2, axis),proj(p2, axis));
 		maxSep = proj1.max-proj1.min+proj2.max-proj2.min; //maximum possible separation
 		sep=std::max(proj1.max, proj2.max)-std::min(proj1.min, proj2.min);
-		if (sep>=maxSep) return Vector(0, 0);
+		if (sep>=maxSep) return NoCollision();
 		sgn=sign(proj1.min-proj2.min+proj1.max-proj2.max);
 		if (sgn<0) diff = (proj1.max-proj2.min);
 		else diff=(proj2.max-proj1.min);
@@ -69,6 +72,6 @@ CollisionInfo CollisionManager::CheckCollision(Shape* s1, Vector p1, Shape* s2,
 			maxAxis=axis;
 		}
 	}
-	return maxAxis*minDst;
+	return CollisionInfo(maxAxis*minDst);
 
 }
