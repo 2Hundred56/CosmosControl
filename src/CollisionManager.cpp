@@ -12,12 +12,11 @@
 #include <set>
 #include <cmath>
 CollisionManager::CollisionManager() {
-	// TODO Auto-generated constructor stub
 
 }
 
 CollisionManager::~CollisionManager() {
-	// TODO Auto-generated destructor stub
+
 }
 
 int sign(float f) {

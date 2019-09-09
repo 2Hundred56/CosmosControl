@@ -14,8 +14,9 @@ Projection operator +(Projection p1, Projection p2) {
 float CollisionNode::CostWith(Rect r) {
 	float cost = Union(rect, r).Area();
 	CollisionNode* n = parent;
-	while (parent!=0) {
+	while (n!=0) {
 		cost += Union(parent->rect, r).Area()-(parent->rect).Area();
+		n=n->parent;
 	}
 	return cost;
 }
@@ -26,10 +27,7 @@ void CollisionTree::InsertNode(CollisionHandle *handle) {
 		nodes.push_back(root);
 		return;
 	}
-	CollisionNode* sibling = 0;
-	for (auto it = nodes.begin(); it!=nodes.end(); it++) {
-		sibling=Best((*it), sibling, handle);
-	}
+	CollisionNode* sibling = Sibling(handle);
 	CollisionNode* grandParent = sibling->parent;
 	CollisionNode* parent = 0;
 	if (grandParent == 0) {
@@ -52,4 +50,32 @@ void CollisionTree::InsertNode(CollisionHandle *handle) {
 		index->rect=Union(index->leaf1->rect, index->leaf2->rect);
 		index=index->parent;
 	}
+}
+
+CollisionNode* CollisionTree::Sibling(CollisionHandle *handle) {
+	std::vector<CollisionNode*> nodes = std::vector<CollisionNode*>();
+	nodes.push_back(root);
+	CollisionNode* best = root;
+	float maxCost = root->CostWith(handle->GetRect());
+	CollisionNode* node;
+	float c, low;
+	while (!nodes.empty()) {
+		node=nodes.back();
+		nodes.pop_back();
+		c=node->CostWith(handle->GetRect());
+		if (c<maxCost) {
+			maxCost=c;
+			best = node;
+		}
+		low = handle->GetRect().Area()+node->CostWith(Rect(0,0,0,0))-node->rect.Area();
+		if (low<maxCost) {
+			if (node->leaf1!=0) {
+				nodes.push_back(node->leaf1);
+			}
+			if (node->leaf2!=0) {
+				nodes.push_back(node->leaf2);
+			}
+		}
+	}
+	return best;
 }

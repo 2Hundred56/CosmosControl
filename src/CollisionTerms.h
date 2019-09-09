@@ -61,7 +61,7 @@ public:
 	std::vector<CollisionNode*> nodes;
 	CollisionNode* root;
 	void InsertNode(CollisionHandle* handle);
-	CollisionNode* Best(CollisionNode* node1, CollisionNode* node2, Rect r);
+	CollisionNode* Sibling(CollisionHandle* handle);
 };
 
 

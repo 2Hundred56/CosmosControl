@@ -11,6 +11,7 @@ class Pixel;
 class IntVector;
 class Texture {
 public:
+	virtual ~Texture();
 	virtual Pixel getPixel(IntVector) = 0;
 	virtual int getWidth() = 0;
 	virtual int getHeight() = 0;
