@@ -21,7 +21,7 @@ float CollisionNode::CostWith(Rect r) {
 	return cost;
 }
 
-void CollisionTree::InsertNode(CollisionHandle *handle) {
+void CollisionTree::Insert(CollisionHandle *handle) {
 	if (root==0) {
 		root=Leaf(0, handle);
 		nodes.push_back(root);
@@ -52,8 +52,59 @@ void CollisionTree::InsertNode(CollisionHandle *handle) {
 	}
 }
 
+Collisions CollisionTree::Update() {
+	std::vector<CollisionNode*> nodes = std::vector<CollisionNode*>();
+	std::vector<CollisionHandle*> handles = std::vector<CollisionHandle*>();
+	nodes.push_back(root);
+	Collisions collisions = Collisions();
+	CollisionNode* node;
+	CollisionNode* check;
+	std::vector<CollisionNode*> checks;
+	CollisionHandle* handle;
+	while (!nodes.empty()) {
+		node=nodes.back();
+		nodes.pop_back();
+		if (node->handle!=0) {
+			if (node->handle->moved) {
+				Remove(node);
+				handles.push_back(node->handle);
+			}
+		}
+		if (node->leaf1!=0) {
+			nodes.push_back(node->leaf1);
+		}
+		if (node->leaf1!=0) {
+			nodes.push_back(node->leaf1);
+		}
+	}
+	while (!handles.empty()) {
+		handle = handles.back();
+		handles.pop_back();
+		checks = std::vector<CollisionNode*>();
+		checks.push_back(root);
+		while (!checks.empty()) {
+			check=checks.back();
+			checks.pop_back();
+			if (RectOverlap(handle->GetRect(), check->rect)) {
+				if (check->handle!=0) {
+					collisions.push_back(std::pair<CollisionHandle*, CollisionHandle*>(handle, check->handle));
+				}
+				if (check->leaf1!=0) {
+					checks.push_back(check->leaf1);
+				}
+				if (check->leaf2!=0) {
+					checks.push_back(check->leaf1);
+				}
+			}
+		}
+		Insert(handle);
+	}
+	return collisions;
+}
+
 CollisionNode* CollisionTree::Sibling(CollisionHandle *handle) {
 	std::vector<CollisionNode*> nodes = std::vector<CollisionNode*>();
+
 	nodes.push_back(root);
 	CollisionNode* best = root;
 	float maxCost = root->CostWith(handle->GetRect());

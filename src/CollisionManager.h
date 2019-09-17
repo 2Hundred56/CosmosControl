@@ -7,14 +7,15 @@
 
 #ifndef COLLISIONMANAGER_H_
 #define COLLISIONMANAGER_H_
-class CollisionHandle;
-class CollisionInfo;
+class BroadPhase;
 class CollisionManager {
 public:
 	CollisionManager();
 	virtual ~CollisionManager();
 	CollisionInfo CheckCollision(CollisionHandle* h1, CollisionHandle* h2);
 	void RegisterHandle(CollisionHandle* handle);
+protected:
+	std::vector<>
 };
 
 #endif /* COLLISIONMANAGER_H_ */
