@@ -67,6 +67,14 @@ unsigned int* GraphicsManager::Process() {
 	}
 	return processed;
 }
+
+GraphicsManager::~GraphicsManager() {
+	for (int i=0; i<width; i++) {
+		delete data[width];
+	}
+	delete data;
+}
+
 void GraphicsManager::AddPixel(IntVector intVector, Pixel pixel) {
 	if (InBounds(intVector)) {
 		data[intVector.x][intVector.y].push_back(pixel);

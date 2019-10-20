@@ -6,7 +6,8 @@
  */
 
 #include "CollisionTerms.h"
-
+#include "Shape.h"
+#include "IntVector.h"
 Projection operator +(Projection p1, Projection p2) {
 	return Projection(p1.min + p2.min, p2.max + p2.max);
 }
@@ -102,6 +103,19 @@ Collisions CollisionTree::Update() {
 	return collisions;
 }
 
+void CollisionTree::Remove(CollisionNode *node) {
+	if (node->handle!=0) {
+		throw(3);
+	}
+	if (node->parent->leaf1==node) {
+		node->parent->leaf1 = 0;
+	}
+	if (node->parent->leaf2==node) {
+		node->parent->leaf2 = 0;
+	}
+	node->parent=0;
+}
+
 CollisionNode* CollisionTree::Sibling(CollisionHandle *handle) {
 	std::vector<CollisionNode*> nodes = std::vector<CollisionNode*>();
 
@@ -129,4 +143,24 @@ CollisionNode* CollisionTree::Sibling(CollisionHandle *handle) {
 		}
 	}
 	return best;
+}
+
+CollisionNode* Leaf(CollisionNode *parent, CollisionHandle *handle) {
+	CollisionNode* n = new CollisionNode(parent, 0, 0, handle->GetRect());
+	n->handle=handle;
+	return n;
+}
+
+Rect CollisionHandle::GetRect() {
+	return GetShape()->ContainBox()+IntVector(GetPos());
+}
+
+CollisionInfo::CollisionInfo(Vector vector){
+	normal=vector;
+	collision=true;
+}
+
+CollisionInfo::CollisionInfo() {
+	normal=Vector(0, 0);
+	collision=false;
 }

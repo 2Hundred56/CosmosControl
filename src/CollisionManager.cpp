@@ -49,7 +49,7 @@ CollisionInfo CollisionManager::CheckCollision(CollisionHandle* h1, CollisionHan
 		Projection proj2 = s2->Proj(axis)+Projection(proj(p2, axis),proj(p2, axis));
 		maxSep = proj1.max-proj1.min+proj2.max-proj2.min; //maximum possible separation
 		sep=std::max(proj1.max, proj2.max)-std::min(proj1.min, proj2.min);
-		if (sep>=maxSep) return NoCollision();
+		if (sep>=maxSep) return CollisionInfo();
 		sgn=sign(proj1.min-proj2.min+proj1.max-proj2.max);
 		if (sgn<0) diff = (proj1.max-proj2.min);
 		else diff=(proj2.max-proj1.min);

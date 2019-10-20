@@ -31,20 +31,21 @@ public:
 Projection operator +(Projection p1, Projection p2);
 class CollisionInfo {
 public:
+	bool collision = false;
 	Vector normal;
 	CollisionInfo(Vector);
+	CollisionInfo();
 	CollisionInfo Reverse();
 };
 class CollisionHandle {
 public:
 	bool moved = false;
-	Shape* GetShape();
-	Vector GetPos();
+	virtual Shape* GetShape() = 0;
+	virtual Vector GetPos() = 0;
 	void CollisionCallback(CollisionHandle* handle, CollisionInfo collision);
 	Rect GetRect();
 };
-typedef std::vector<std::pair<CollisionHandle*, CollisionHandle*>> Collisions;
-CollisionInfo NoCollision();
+typedef std::vector<std::pair<CollisionHandle*, CollisionHandle*> > Collisions;
 class BroadPhase {
 public:
 	virtual void Insert(CollisionHandle* handle) = 0;

@@ -50,6 +50,38 @@ bool operator <=(TimeDelta timeDelta, TimeDelta timeDelta1) {
 	return timeDelta.seconds<=timeDelta1.seconds;
 }
 
+Time& operator +=(Time& time, TimeDelta timeDelta) {
+	time.seconds+=timeDelta.seconds;
+}
+
+Time& operator -=(Time& time, TimeDelta timeDelta) {
+	time.seconds-=timeDelta.seconds;
+}
+
+TimeDelta& operator +=(TimeDelta& timeDelta, TimeDelta timeDelta1) {
+	timeDelta.seconds+=timeDelta1.seconds;
+}
+
+TimeDelta& operator -=(TimeDelta& timeDelta, TimeDelta timeDelta1) {
+	timeDelta.seconds-=timeDelta1.seconds;
+}
+
 bool operator >=(TimeDelta timeDelta, TimeDelta timeDelta1) {
 	return timeDelta.seconds>=timeDelta1.seconds;
+}
+
+Time::Time() {
+	seconds = 0;
+}
+
+TimeDelta::TimeDelta() {
+	seconds = 0;
+}
+
+Time::Time(float float1) {
+	seconds = float1;
+}
+
+TimeDelta::TimeDelta(float float1) {
+	seconds = float1;
 }

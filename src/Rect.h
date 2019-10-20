@@ -7,7 +7,7 @@
 
 #ifndef RECT_H_
 #define RECT_H_
-class Vector;
+class IntVector;
 class Rect {
 public:
 	int x, y, w, h;
@@ -19,7 +19,7 @@ public:
 	float Area();
 };
 
-Rect operator+(Rect r, Vector v);
+Rect operator+(Rect r, IntVector v);
 Rect Union(Rect r1, Rect r2);
 bool RectOverlap(Rect r1, Rect r2);
 
