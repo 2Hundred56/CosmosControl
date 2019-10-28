@@ -9,16 +9,23 @@
 #define COLLISIONMANAGER_H_
 #include <vector>
 class BroadPhase;
+class CollisionLayer;
 class CollisionInfo;
+class CollisionResult;
 class CollisionHandle;
 class CollisionManager {
 public:
 	CollisionManager();
 	virtual ~CollisionManager();
-	CollisionInfo CheckCollision(CollisionHandle* h1, CollisionHandle* h2);
+	CollisionResult CheckCollision(CollisionHandle* h1, CollisionHandle* h2, int cflag = 0);
 	void RegisterHandle(CollisionHandle* handle);
+	std::vector<CollisionInfo> CheckCollisions(CollisionHandle* h1);
+	void Update();
+	void ResolveCollision(CollisionInfo i);
 protected:
-	std::vector<BroadPhase> broadPhases;
+	BroadPhase* centralSystem;
+	std::vector<CollisionLayer*> collisionLayers;
+	std::vector<CollisionHandle*> handles;
 };
 
 #endif /* COLLISIONMANAGER_H_ */

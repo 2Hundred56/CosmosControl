@@ -19,7 +19,7 @@ Vector operator *(Vector v, float f) {
 	return Vector(v.x * f, v.y * f);
 }
 
-float proj(Vector v, Vector axis) {
+float projection(Vector v, Vector axis) {
 	//Assume axis is normalized
 	return axis * v;
 }

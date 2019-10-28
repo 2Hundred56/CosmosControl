@@ -9,10 +9,10 @@
 #include <algorithm>
 
 Rect Union(Rect r1, Rect r2) {
-	int minX=std::min(r1.x, r2.x);
-	int maxX=std::max(r1.x, r2.x);
-	int minY=std::min(r1.y, r2.y);
-	int maxY=std::max(r1.y, r2.y);
+	float minX=std::min(r1.x, r2.x);
+	float maxX=std::max(r1.x, r2.x);
+	float minY=std::min(r1.y, r2.y);
+	float maxY=std::max(r1.y, r2.y);
 	return Rect(minX, minY, maxX-minX, maxY-minY);
 }
 

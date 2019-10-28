@@ -30,7 +30,7 @@ Vector operator *(Vector v, float f);
 
 Vector& operator+= (Vector& orig, Vector add);
 
-float proj(Vector v, Vector axis);
+float projection(Vector v, Vector axis);
 
 Vector operator- (Vector v);
 

@@ -6,8 +6,8 @@
  */
 
 #include "CollisionTerms.h"
-#include "Shape.h"
 #include "IntVector.h"
+#include <algorithm>
 Projection operator +(Projection p1, Projection p2) {
 	return Projection(p1.min + p2.min, p2.max + p2.max);
 }
@@ -53,60 +53,32 @@ void CollisionTree::Insert(CollisionHandle *handle) {
 	}
 }
 
-Collisions CollisionTree::Update() {
-	std::vector<CollisionNode*> nodes = std::vector<CollisionNode*>();
-	std::vector<CollisionHandle*> handles = std::vector<CollisionHandle*>();
-	nodes.push_back(root);
+Collisions CollisionTree::Check(CollisionHandle* handle) {
 	Collisions collisions = Collisions();
 	CollisionNode* node;
 	CollisionNode* check;
 	std::vector<CollisionNode*> checks;
-	CollisionHandle* handle;
-	while (!nodes.empty()) {
-		node=nodes.back();
-		nodes.pop_back();
-		if (node->handle!=0) {
-			if (node->handle->moved) {
-				Remove(node);
-				handles.push_back(node->handle);
+	checks = std::vector<CollisionNode*>();
+	checks.push_back(root);
+	while (!checks.empty()) {
+		check=checks.back();
+		checks.pop_back();
+		if (RectOverlap(handle->GetRect(), check->rect)) {
+			if (check->handle!=0) {
+				collisions.push_back(std::pair<CollisionHandle*, CollisionHandle*>(handle, check->handle));
+			}
+			if (check->leaf1!=0) {
+				checks.push_back(check->leaf1);
+			}
+			if (check->leaf2!=0) {
+				checks.push_back(check->leaf1);
 			}
 		}
-		if (node->leaf1!=0) {
-			nodes.push_back(node->leaf1);
-		}
-		if (node->leaf1!=0) {
-			nodes.push_back(node->leaf1);
-		}
-	}
-	while (!handles.empty()) {
-		handle = handles.back();
-		handles.pop_back();
-		checks = std::vector<CollisionNode*>();
-		checks.push_back(root);
-		while (!checks.empty()) {
-			check=checks.back();
-			checks.pop_back();
-			if (RectOverlap(handle->GetRect(), check->rect)) {
-				if (check->handle!=0) {
-					collisions.push_back(std::pair<CollisionHandle*, CollisionHandle*>(handle, check->handle));
-				}
-				if (check->leaf1!=0) {
-					checks.push_back(check->leaf1);
-				}
-				if (check->leaf2!=0) {
-					checks.push_back(check->leaf1);
-				}
-			}
-		}
-		Insert(handle);
 	}
 	return collisions;
 }
 
 void CollisionTree::Remove(CollisionNode *node) {
-	if (node->handle!=0) {
-		throw(3);
-	}
 	if (node->parent->leaf1==node) {
 		node->parent->leaf1 = 0;
 	}
@@ -152,15 +124,81 @@ CollisionNode* Leaf(CollisionNode *parent, CollisionHandle *handle) {
 }
 
 Rect CollisionHandle::GetRect() {
-	return GetShape()->ContainBox()+IntVector(GetPos());
+	return GetShape()->ContainBox()+GetPos();
 }
 
-CollisionInfo::CollisionInfo(Vector vector){
+CollisionInfo::CollisionInfo(CollisionResult result, CollisionHandle* h1, CollisionHandle* h2) : result(result), h1(h1), h2(h2){
+}
+
+std::set<Vector> AABB::Axes(Shape*, Vector vector) {
+	std::set<Vector> axes;
+	axes.insert(Vector(0, 1));
+	axes.insert(Vector(1, 0));
+	return axes;
+}
+
+Projection AABB::Proj(Vector axis) {
+	float a = projection(Vector(-hw, -hh), axis);
+	float b = projection(Vector(hw, -hh), axis);
+	float c = projection(Vector(-hw, hh), axis);
+	float d = projection(Vector(hw, hh), axis);
+	return Projection(std::min(std::min(a, b), std::min(c, d)), std::max(std::max(a, b), std::max(c, d)));
+}
+
+Rect AABB::ContainBox() {
+	return Rect(-hw, -hh, hw*2, hh*2);
+}
+
+AABB::AABB(float hw, float hh) : hw(hw), hh(hh){
+}
+
+TestHandle::TestHandle(Vector p, Shape *s) : pos (p), shape(s) {
+}
+
+Shape* TestHandle::GetShape() {
+	return shape;
+}
+
+Vector TestHandle::GetPos() {
+	return pos;
+}
+
+CollisionResult::CollisionResult(Vector vector, Vector sn) {
 	normal=vector;
+	slopeNormal=sn;
 	collision=true;
 }
 
-CollisionInfo::CollisionInfo() {
-	normal=Vector(0, 0);
+CollisionResult::CollisionResult() {
 	collision=false;
+}
+
+std::vector<CollisionHandle*> CollisionTree::GrabMoved() {
+	std::vector<CollisionHandle*> handles = std::vector<CollisionHandle*>();
+	std::vector<CollisionNode*> unprocessedNodes = std::vector<CollisionNode*>();
+	unprocessedNodes.push_back(root);
+	CollisionNode* node;
+	while (!unprocessedNodes.empty()) {
+		node=unprocessedNodes.back();
+		unprocessedNodes.pop_back();
+		if (node->handle==0) {
+			if (node->leaf1==0 && node->leaf2==0) {
+				Remove(node);
+			}
+			if (node->leaf1!=0) {
+				unprocessedNodes.push_back(node->leaf1);
+			}
+			if (node->leaf2!=0) {
+				unprocessedNodes.push_back(node->leaf2);
+			}
+		}
+		else {
+			handles.push_back(node->handle);
+		}
+	}
+	return handles;
+}
+
+CollisionTree::CollisionTree() {
+	root=0;
 }

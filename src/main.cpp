@@ -12,15 +12,24 @@ and may not be redistributed without written permission.*/
 and may not be redistributed without written permission.*/
 
 //Using SDL and standard IO
-#include <SDL2/SDL.h>
-#include <stdio.h>
 
+#include "CollisionManager.h"
+#include "CollisionTerms.h"
+#include <stdio.h>
+#include <iostream>
+#include <SDL2/SDL.h>
 //Screen dimension constants
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
 int main( int argc, char* args[] )
 {
+	AABB* box = new AABB(1, 1);
+	TestHandle* h1 = new TestHandle(Vector(0, 0), box);
+	TestHandle* h2 = new TestHandle(Vector(1, 0), box);
+	CollisionManager* manager = new CollisionManager();
+	CollisionResult info = manager->CheckCollision(h1, h2);
+	return 0;
 	//The window we'll be rendering to
 	SDL_Window* window = NULL;
 
