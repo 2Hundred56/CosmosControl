@@ -7,11 +7,15 @@
 
 #include "CollisionManager.h"
 #include "Vector.h"
+#include "CollisionTree.h"
 #include "CollisionTerms.h"
 #include <set>
 #include <cmath>
 CollisionManager::CollisionManager() {
 	centralSystem = new CollisionTree();
+	collisionLayers.push_back(centralSystem);
+	ID = 0;
+	std::vector<CollisionHandle*> waitlist = std::vector<CollisionHandle*> ();
 }
 
 CollisionManager::~CollisionManager() {
@@ -27,6 +31,8 @@ int sign(float f) {
 		return 0;
 }
 CollisionResult CollisionManager::CheckCollision(CollisionHandle* h1, CollisionHandle* h2, int cflag) {
+	std::cout<<h1->ID<<" "<<h1->GetRect()<<" v "<<h2->ID<<" "<<h2->GetRect()<<"\n"<<std::flush;
+	if (cflag==BAD_FLAG) return CollisionResult();
 	Shape* s1 = h1->GetShape();
 	Vector p1 = h1->GetPos();
 	Shape* s2 = h2->GetShape();
@@ -50,7 +56,8 @@ CollisionResult CollisionManager::CheckCollision(CollisionHandle* h1, CollisionH
 		Projection proj2 = s2->Proj(axis)+Projection(projection(p2, axis),projection(p2, axis));
 		maxSep = proj1.max-proj1.min+proj2.max-proj2.min; //maximum possible separation
 		sep=std::max(proj1.max, proj2.max)-std::min(proj1.min, proj2.min);
-		if (sep>=maxSep) return CollisionResult```````();
+		std::cout<<(axis)<<":   "<<Vector(Projection(projection(p1, axis),projection(p1, axis)).min, Projection(projection(p1, axis),projection(p1, axis)).max)<<" and "<<Vector(Projection(projection(p2, axis),projection(p2, axis)).min, Projection(projection(p2, axis),projection(p2, axis)).max)<<":"<<sep<<"\n"<<std::flush;
+		if (sep>=maxSep) return CollisionResult();
 		sgn=sign(proj1.min-proj2.min+proj1.max-proj2.max);
 		if (sgn<0) diff = (proj1.max-proj2.min);
 		else diff=(proj2.max-proj1.min);
@@ -81,9 +88,8 @@ CollisionResult CollisionManager::CheckCollision(CollisionHandle* h1, CollisionH
 }
 
 void CollisionManager::RegisterHandle(CollisionHandle *handle) {
-	handles.push_back(handle);
-	centralSystem->Insert(handle);
-	handle->moved = true;
+	waitlist.push_back(handle);
+	handle->ID=ID++;
 }
 
 std::vector<CollisionInfo> CollisionManager::CheckCollisions(
@@ -93,7 +99,6 @@ std::vector<CollisionInfo> CollisionManager::CheckCollisions(
 	Collisions temp;
 	CollisionHandle* first;
 	CollisionHandle* second;
-	CollisionInfo info;
 	CollisionResult n;
 	for (auto it = collisionLayers.begin(); it!=collisionLayers.end(); it++) {
 		temp = (*it)->Check(handle);
@@ -108,11 +113,16 @@ std::vector<CollisionInfo> CollisionManager::CheckCollisions(
 		if (!n.collision) continue;
 		collisionInfos.push_back(CollisionInfo(n, first, second));
 	}
-	return collisions;
+	return collisionInfos;
 }
 
 void CollisionManager::Update() {
+
 	std::vector<CollisionHandle*> moved = centralSystem->GrabMoved();
+	for (auto it = waitlist.begin(); it!=waitlist.end(); it++) {
+		moved.push_back(*it);
+	}
+	waitlist.clear();
 	std::vector<CollisionInfo> collisionChecks = std::vector<CollisionInfo>();
 	std::vector<CollisionInfo> colls;
 	for (auto it = moved.begin(); it!=moved.end(); it++) {
@@ -125,4 +135,9 @@ void CollisionManager::Update() {
 	for (auto it = collisionChecks.begin(); it!=collisionChecks.end(); it++) {
 		ResolveCollision(*it);
 	}
+}
+
+void CollisionManager::ResolveCollision(CollisionInfo i) {
+	i.h1->CollisionCallback(i);
+	i.h2->CollisionCallback(i.Reverse());
 }

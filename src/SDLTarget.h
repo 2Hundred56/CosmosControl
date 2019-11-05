@@ -13,6 +13,7 @@ struct SDL_Texture;
 struct SDL_Texture;
 struct SDL_Renderer;
 struct SDL_Window;
+class IntVector;
 class SDLTarget: public RenderTarget {
 public:
 	SDLTarget();
@@ -20,7 +21,7 @@ public:
 	virtual void Render(unsigned int* data, int w, int h);
 	virtual void Flip();
 	virtual void BeginGraphics();
-	virtual void Initialize();
+	virtual void Initialize(IntVector);
 	virtual void CloseGraphics();
 protected:
 	SDL_Texture* screenTexture;

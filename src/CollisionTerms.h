@@ -10,7 +10,9 @@
 #include "Vector.h"
 #include "Rect.h"
 #include <vector>
+#include <iostream>
 #include <set>
+class Texture;
 const int NO_UP = 1;
 const int NO_LEFT = 2;
 const int NO_RIGHT = 4;
@@ -65,6 +67,19 @@ public:
 	CollisionResult(Vector, Vector);
 	CollisionResult();
 };
+class CollisionInfo;
+class CollisionHandle {
+public:
+	virtual ~CollisionHandle() {
+
+	}
+	bool moved = false;
+	int ID = 0;
+	virtual Shape* GetShape() = 0;
+	virtual Vector GetPos() = 0;
+	virtual void CollisionCallback(CollisionInfo collision);
+	virtual Rect GetRect();
+};
 class CollisionInfo {
 public:
 	CollisionResult result;
@@ -73,21 +88,12 @@ public:
 	CollisionInfo(CollisionResult, CollisionHandle*, CollisionHandle*);
 	CollisionInfo Reverse();
 };
-class CollisionHandle {
-public:
-	bool moved = false;
-	virtual Shape* GetShape() = 0;
-	virtual Vector GetPos() = 0;
-	virtual void CollisionCallback(CollisionHandle* handle, CollisionInfo collision) {
-
-	}
-	virtual Rect GetRect();
-};
 class TestHandle : public CollisionHandle {
 public:
 	TestHandle(Vector p, Shape* s);
 	Shape* GetShape();
 	Vector GetPos();
+	void CollisionCallback(CollisionInfo collision);
 protected:
 	Shape* shape;
 	Vector pos;
@@ -105,31 +111,24 @@ public:
 	virtual void Insert(CollisionHandle* handle) = 0;
 	virtual std::vector<CollisionHandle*> GrabMoved() = 0;
 };
-class CollisionNode {
+
+class Tile {
 public:
-	Rect rect;
-	CollisionNode* leaf1;
-	CollisionNode* leaf2;
-	CollisionNode* parent;
-	CollisionHandle* handle = 0;
-	CollisionNode(CollisionNode* parent, CollisionNode* leaf1, CollisionNode* leaf2, Rect rect) : parent(parent), leaf1(leaf1), leaf2(leaf2), rect(rect){
+	Shape* shape;
+	Texture* texture;
+	Tile(Shape* s = 0, Texture* t = 0) : shape(s), texture(t) {
 
 	}
-	float CostWith(Rect r);
-
 };
-CollisionNode* Leaf (CollisionNode* parent, CollisionHandle *handle);
-class CollisionTree : public BroadPhase{
+class TileHandle : public CollisionHandle {
 public:
-	CollisionTree();
-	std::vector<CollisionNode*> nodes;
-	CollisionNode* root;
-	void Insert(CollisionHandle* handle);
-	void Remove(CollisionNode* node);
-	std::vector<CollisionHandle*> GrabMoved();
-	Collisions Check(CollisionHandle* handle);
-	CollisionNode* Sibling(CollisionHandle* handle);
+	TileHandle(Vector p, Tile* t);
+	Shape* GetShape();
+	Vector GetPos();
+	void CollisionCallback(CollisionInfo collision);
+protected:
+	Tile* tile;
+	Vector pos;
 };
-
 
 #endif /* COLLISIONTERMS_H_ */

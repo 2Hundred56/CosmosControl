@@ -15,10 +15,10 @@ class ResourceManager {
 public:
 	ResourceManager();
 	virtual ~ResourceManager();
-	BasicTexture* LoadTexture(char* key);
+	BasicTexture* LoadTextureBMP(char* key);
 protected:
 	std::map<std::string, std::string> paths;
-	std::map<std::string, BasicTexture*> textures;
+	std::map<std::string, BasicTexture*> basicTextures;
 };
 
 #endif /* RESOURCEMANAGER_H_ */

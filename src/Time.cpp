@@ -52,18 +52,22 @@ bool operator <=(TimeDelta timeDelta, TimeDelta timeDelta1) {
 
 Time& operator +=(Time& time, TimeDelta timeDelta) {
 	time.seconds+=timeDelta.seconds;
+	return time;
 }
 
 Time& operator -=(Time& time, TimeDelta timeDelta) {
 	time.seconds-=timeDelta.seconds;
+	return time;
 }
 
 TimeDelta& operator +=(TimeDelta& timeDelta, TimeDelta timeDelta1) {
 	timeDelta.seconds+=timeDelta1.seconds;
+	return timeDelta;
 }
 
 TimeDelta& operator -=(TimeDelta& timeDelta, TimeDelta timeDelta1) {
 	timeDelta.seconds-=timeDelta1.seconds;
+	return timeDelta;
 }
 
 bool operator >=(TimeDelta timeDelta, TimeDelta timeDelta1) {

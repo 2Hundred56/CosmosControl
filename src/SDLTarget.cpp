@@ -7,6 +7,7 @@
 
 #include "SDLTarget.h"
 #include "SDL2/SDL.h"
+#include "IntVector.h"
 
 void SDLTarget::Render(unsigned int *data, int w, int h) {
 	if (width!=w || height!=h) {
@@ -28,14 +29,22 @@ void SDLTarget::Flip() {
 void SDLTarget::BeginGraphics() {
 }
 
-void SDLTarget::Initialize() {
+void SDLTarget::Initialize(IntVector x) {
+	width=x.x;
+	height=x.y;
 	if( SDL_Init( SDL_INIT_EVERYTHING ) < 0 ) throw(1);
 	window = SDL_CreateWindow("Generic", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
-	if( window == NULL ) throw(2);
+	if( window == NULL ) throw("3");
 	renderer = SDL_CreateRenderer(window, -1, 0);
-	if (renderer == NULL) throw(3);
+	if (renderer == NULL) throw(true);
 	screenTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, width, height);
-	if (screenTexture==NULL) throw(4);
+	if (screenTexture==NULL) throw(1.2);
+}
+
+SDLTarget::SDLTarget() {
+}
+
+SDLTarget::~SDLTarget() {
 }
 
 void SDLTarget::CloseGraphics() {

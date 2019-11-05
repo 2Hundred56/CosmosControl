@@ -39,9 +39,9 @@ unsigned int getpixel(SDL_Surface *surface, int x, int y)
     }
 }
 
-BasicTexture* ResourceManager::LoadTexture(char* key) {
-	auto it=textures.find(std::string(key));
-	if (it!=textures.end()) return it->second;
+BasicTexture* ResourceManager::LoadTextureBMP(char* key) {
+	auto it=basicTextures.find(std::string(key));
+	if (it!=basicTextures.end()) return it->second;
 	std::string path = paths.find(std::string(key))->second;
 	SDL_Surface* surface = SDL_LoadBMP(path.c_str());
 	SDL_LockSurface(surface);
@@ -57,7 +57,6 @@ BasicTexture* ResourceManager::LoadTexture(char* key) {
 		}
 	}
 	BasicTexture* tex = new BasicTexture(surface->w, surface->h, data);
-	textures.insert(std::pair<std::string, BasicTexture*>(key, tex));
+	basicTextures.insert(std::pair<std::string, BasicTexture*>(key, tex));
 	return tex;
-
 }

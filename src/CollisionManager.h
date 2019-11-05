@@ -8,7 +8,7 @@
 #ifndef COLLISIONMANAGER_H_
 #define COLLISIONMANAGER_H_
 #include <vector>
-class BroadPhase;
+class CollisionTree;
 class CollisionLayer;
 class CollisionInfo;
 class CollisionResult;
@@ -23,9 +23,11 @@ public:
 	void Update();
 	void ResolveCollision(CollisionInfo i);
 protected:
-	BroadPhase* centralSystem;
+	CollisionTree* centralSystem;
 	std::vector<CollisionLayer*> collisionLayers;
 	std::vector<CollisionHandle*> handles;
+	std::vector<CollisionHandle*> waitlist;
+	int ID;
 };
 
 #endif /* COLLISIONMANAGER_H_ */

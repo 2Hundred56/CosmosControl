@@ -7,7 +7,8 @@
 
 #ifndef RECT_H_
 #define RECT_H_
-class IntVector;
+#include <iostream>
+class Vector;
 class Rect {
 public:
 	float x, y, w, h;
@@ -19,8 +20,8 @@ public:
 	float Area();
 };
 
-Rect operator+(Rect r, IntVector v);
+Rect operator+(Rect r, Vector v);
 Rect Union(Rect r1, Rect r2);
 bool RectOverlap(Rect r1, Rect r2);
-
+std::ostream& operator<<(std::ostream&, Rect);
 #endif /* RECT_H_ */
