@@ -14,16 +14,6 @@ Time operator -(Time time, TimeDelta timeDelta) {
 	return Time(time.seconds-timeDelta.seconds);
 }
 
-Time& operator +=(Time& time, TimeDelta timeDelta) {
-	time=time+timeDelta;
-	return time;
-}
-
-Time& operator -=(Time& time, TimeDelta timeDelta) {
-	time=time-timeDelta;
-	return time;
-}
-
 TimeDelta operator +(TimeDelta timeDelta, TimeDelta timeDelta1) {
 	return TimeDelta(timeDelta.seconds+timeDelta1.seconds);
 }
@@ -38,16 +28,6 @@ TimeDelta operator *(TimeDelta timeDelta, float float1) {
 
 TimeDelta operator /(TimeDelta timeDelta, float float1) {
 	return TimeDelta(timeDelta.seconds/float1);
-}
-
-TimeDelta& operator +=(TimeDelta& timeDelta1, TimeDelta timeDelta) {
-	timeDelta1=timeDelta1+timeDelta;
-	return timeDelta1;
-}
-
-TimeDelta& operator -=(TimeDelta& timeDelta1, TimeDelta timeDelta) {
-	timeDelta1=timeDelta1-timeDelta;
-	return timeDelta1;
 }
 
 bool operator <(TimeDelta timeDelta, TimeDelta timeDelta1) {
