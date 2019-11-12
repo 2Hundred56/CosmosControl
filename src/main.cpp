@@ -14,6 +14,9 @@ and may not be redistributed without written permission.*/
 //Using SDL and standard IO
 
 #include "GraphicsManager.h"
+#include "CollisionManager.h"
+#include "CollisionTerms.h"
+#include "TileLayer.h"
 #include "IntVector.h"
 #include "SDLTarget.h"
 #include <stdio.h>
@@ -25,6 +28,18 @@ const int SCREEN_HEIGHT = 480;
 
 int main( int argc, char* args[] )
 {
+	AABB* unitBox = new AABB(0.5, 0.5);
+	CollisionManager* cm = new CollisionManager();
+	TileLayer* tl = new TileLayer(3, 3, 1);
+	cm->collisionLayers.push_back(tl);
+	tl->tileArray[1][2]=0;
+	tl->tilesetArray[1][2]=0;
+	std::vector<Tile*> set1 = std::vector<Tile*>();
+	set1.push_back(new Tile(unitBox, 0));
+	tl->tiles.push_back(set1);
+	CollisionHandle* h1 = new TestHandle(Vector(1.5, 2), unitBox);
+	cm->RegisterHandle(h1);
+	cm->Update();
 	GraphicsManager* gm = new GraphicsManager(SCREEN_WIDTH, SCREEN_HEIGHT);
 	RenderTarget* sdl = new SDLTarget();
 	sdl->BeginGraphics();

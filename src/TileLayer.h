@@ -12,10 +12,9 @@
 class IntVector;
 class TileLayer : public CollisionLayer {
 public:
-	TileLayer (int w, int h);
+	TileLayer (int w, int h, int ts);
 	Tile* GetTile(IntVector i);
 	virtual Collisions Check(CollisionHandle* handle);
-protected:
 	int width;
 	int height;
 	int** tileArray;

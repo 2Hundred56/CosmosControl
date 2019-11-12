@@ -125,7 +125,9 @@ public:
 	TileHandle(Vector p, Tile* t);
 	Shape* GetShape();
 	Vector GetPos();
-	void CollisionCallback(CollisionInfo collision);
+	void CollisionCallback(CollisionInfo collision) {
+
+	}
 protected:
 	Tile* tile;
 	Vector pos;

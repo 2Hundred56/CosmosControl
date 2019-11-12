@@ -22,7 +22,6 @@ public:
 	std::vector<CollisionInfo> CheckCollisions(CollisionHandle* h1);
 	void Update();
 	void ResolveCollision(CollisionInfo i);
-protected:
 	CollisionTree* centralSystem;
 	std::vector<CollisionLayer*> collisionLayers;
 	std::vector<CollisionHandle*> handles;
