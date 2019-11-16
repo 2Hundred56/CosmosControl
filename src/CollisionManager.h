@@ -17,7 +17,7 @@ class CollisionManager {
 public:
 	CollisionManager();
 	virtual ~CollisionManager();
-	CollisionResult CheckCollision(CollisionHandle* h1, CollisionHandle* h2, int cflag = 0);
+	CollisionResult CheckCollision(CollisionHandle* h1, CollisionHandle* h2);
 	void RegisterHandle(CollisionHandle* handle);
 	std::vector<CollisionInfo> CheckCollisions(CollisionHandle* h1);
 	void Update();

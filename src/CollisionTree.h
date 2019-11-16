@@ -33,9 +33,9 @@ public:
 	void Insert(CollisionHandle* handle);
 	void Remove(CollisionNode* node);
 	CollisionNode* Leaf (CollisionNode* parent, CollisionHandle *handle);
-	std::vector<CollisionHandle*> GrabMoved();
 	Collisions Check(CollisionHandle* handle);
 	CollisionNode* Sibling(CollisionHandle* handle);
+	std::vector<CollisionHandle*> GrabMoved();
 };
 std::ostream& operator<<(std::ostream&, CollisionTree*);
 

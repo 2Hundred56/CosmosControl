@@ -39,6 +39,8 @@ int main( int argc, char* args[] )
 	tl->tiles.push_back(set1);
 	CollisionHandle* h1 = new TestHandle(Vector(1.5, 2), unitBox);
 	cm->RegisterHandle(h1);
+	CollisionHandle* h2 = new TestHandle(Vector(2, 2), unitBox);
+	cm->RegisterHandle(h2);
 	cm->Update();
 	GraphicsManager* gm = new GraphicsManager(SCREEN_WIDTH, SCREEN_HEIGHT);
 	RenderTarget* sdl = new SDLTarget();

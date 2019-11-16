@@ -73,7 +73,9 @@ public:
 	virtual ~CollisionHandle() {
 
 	}
-	bool moved = false;
+	int moved = 0; //-1 = never moves (static), 0 = has not moved, 1 = has moved, 2 = always considered to have moved
+	int cstep = 0;
+	int cflag = 0;
 	int ID = 0;
 	virtual Shape* GetShape() = 0;
 	virtual Vector GetPos() = 0;

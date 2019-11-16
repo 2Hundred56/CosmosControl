@@ -26,6 +26,13 @@ std::set<Vector> AABB::Axes(Shape*, Vector vector) {
 	return axes;
 }
 
+void TestHandle::CollisionCallback(CollisionInfo collision) {
+	std::cout<<ID<<" reports collision. Normal: "<<collision.result.normal<<"\n"<<std::flush;
+}
+
+void CollisionHandle::CollisionCallback(CollisionInfo collision) {
+}
+
 Projection AABB::Proj(Vector axis) {
 	float a = projection(Vector(-hw, -hh), axis);
 	float b = projection(Vector(hw, -hh), axis);

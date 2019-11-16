@@ -25,7 +25,7 @@ std::vector<CollisionHandle*> CollisionTree::GrabMoved() {
 				unprocessedNodes.push_back(node->leaf2);
 			}
 		}
-		else if (node->handle->moved){
+		else if (node->handle->moved>0){
 			Remove(node);
 			handles.push_back(node->handle);
 		}
@@ -59,13 +59,6 @@ CollisionTree::CollisionTree() {
 
 CollisionInfo CollisionInfo::Reverse() {
 	return CollisionInfo(CollisionResult(-result.normal, -result.slopeNormal), h2, h1);
-}
-
-void TestHandle::CollisionCallback(CollisionInfo collision) {
-	std::cout<<ID<<" MM-BAP "<<collision.result.normal<<"\n"<<std::flush;
-}
-
-void CollisionHandle::CollisionCallback(CollisionInfo collision) {
 }
 
 std::ostream& operator <<(std::ostream &out,
@@ -146,7 +139,6 @@ void CollisionTree::Insert(CollisionHandle *handle) {
 }
 
 Collisions CollisionTree::Check(CollisionHandle* handle) {
-	std::cout<<"ID: "<<handle->ID<<"\n"<<std::flush;
 	Collisions collisions = Collisions();
 	if (root==0) return collisions;
 	CollisionNode* node;
@@ -157,7 +149,6 @@ Collisions CollisionTree::Check(CollisionHandle* handle) {
 	while (!checks.empty()) {
 		check=checks.back();
 		checks.pop_back();
-		std::cout<<check<<"\n"<<std::flush;
 		if (RectOverlap(handle->GetRect(), check->rect)) {
 			if (check->leaf1==0 && check->handle==0 && check->leaf2==0) {
 				Remove(check);

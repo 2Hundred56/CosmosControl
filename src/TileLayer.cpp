@@ -37,7 +37,6 @@ Collisions TileLayer::Check(CollisionHandle *handle) {
 	int j1 = (r.y+r.h)/tileSize+1;
 	for (int i=i0; i<i1; i++) {
 		for (int j=j0; j<j1; j++) {
-			std::cout<<Vector(i, j)<<std::flush;
 			t = GetTile(IntVector(i, j));
 			if (t==0) continue;
 			if (t->shape==0) continue;

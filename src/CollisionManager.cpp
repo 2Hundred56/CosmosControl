@@ -30,8 +30,8 @@ int sign(float f) {
 	else
 		return 0;
 }
-CollisionResult CollisionManager::CheckCollision(CollisionHandle* h1, CollisionHandle* h2, int cflag) {
-	std::cout<<h1->ID<<" "<<h1->GetRect()<<" v "<<h2->ID<<" "<<h2->GetRect()<<"\n"<<std::flush;
+CollisionResult CollisionManager::CheckCollision(CollisionHandle* h1, CollisionHandle* h2) {
+	int cflag = h1->cflag | h2->cflag;
 	if (cflag==BAD_FLAG) return CollisionResult();
 	Shape* s1 = h1->GetShape();
 	Vector p1 = h1->GetPos();
@@ -56,7 +56,6 @@ CollisionResult CollisionManager::CheckCollision(CollisionHandle* h1, CollisionH
 		Projection proj2 = s2->Proj(axis)+Projection(projection(p2, axis),projection(p2, axis));
 		maxSep = proj1.max-proj1.min+proj2.max-proj2.min; //maximum possible separation
 		sep=std::max(proj1.max, proj2.max)-std::min(proj1.min, proj2.min);
-		std::cout<<(axis)<<":   "<<Vector(Projection(projection(p1, axis),projection(p1, axis)).min, Projection(projection(p1, axis),projection(p1, axis)).max)<<" and "<<Vector(Projection(projection(p2, axis),projection(p2, axis)).min, Projection(projection(p2, axis),projection(p2, axis)).max)<<":"<<sep<<"\n"<<std::flush;
 		if (sep>=maxSep) return CollisionResult();
 		sgn=sign(proj1.min-proj2.min+proj1.max-proj2.max);
 		if (sgn<0) diff = (proj1.max-proj2.min);
@@ -67,7 +66,7 @@ CollisionResult CollisionManager::CheckCollision(CollisionHandle* h1, CollisionH
 			maxSAxis=axis;
 		}
 		if (std::abs(axis.x)==1) { //We know it's normalized, so no need testing y coord
-		//TODO: This code probably could be cleaned up
+			//TODO: This code probably could be cleaned up
 			if ((cflag&NO_LEFT) && (cflag&NO_RIGHT)) continue;
 			if (((cflag&NO_LEFT) && sgn>0) || ((cflag&NO_RIGHT) && sgn<0)) continue;
 		}
@@ -117,23 +116,34 @@ std::vector<CollisionInfo> CollisionManager::CheckCollisions(
 }
 
 void CollisionManager::Update() {
-
 	std::vector<CollisionHandle*> moved = centralSystem->GrabMoved();
+	std::vector<CollisionHandle*> next = std::vector<CollisionHandle*>();
 	for (auto it = waitlist.begin(); it!=waitlist.end(); it++) {
 		moved.push_back(*it);
 	}
 	waitlist.clear();
 	std::vector<CollisionInfo> collisionChecks = std::vector<CollisionInfo>();
 	std::vector<CollisionInfo> colls;
-	for (auto it = moved.begin(); it!=moved.end(); it++) {
-		colls=CheckCollisions(*it);
-		for (auto it2 = colls.begin(); it2!=colls.end(); it2++) {
-			collisionChecks.push_back(*it2);
+	int i = 0;
+	while (!moved.empty()) {
+		collisionChecks.clear();
+		for (auto it = moved.begin(); it!=moved.end(); it++) {
+			if ((*it)->cstep != i) {
+				next.push_back(*it);
+				continue;
+			}
+			colls=CheckCollisions(*it);
+			for (auto it2 = colls.begin(); it2!=colls.end(); it2++) {
+				collisionChecks.push_back(*it2);
+			}
+			centralSystem->Insert(*it);
 		}
-		centralSystem->Insert(*it);
-	}
-	for (auto it = collisionChecks.begin(); it!=collisionChecks.end(); it++) {
-		ResolveCollision(*it);
+		for (auto it = collisionChecks.begin(); it!=collisionChecks.end(); it++) {
+			ResolveCollision(*it);
+		}
+		moved = std::vector<CollisionHandle*>(next);
+		next.clear();
+		i++;
 	}
 }
 
